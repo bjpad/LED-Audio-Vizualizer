@@ -2,9 +2,22 @@
 #include <FastLED.h>
 
 #define NumLEDS 300
-#define DataPin 6
-int LoopColorChange = 255/NumLEDS;
+#define LEDSPin 6 //LEDs pin
+#define AnalogReadPin 0 // Sensor pin
+#define SensorLOW 0.0
+#define SensorHIGH 737.0 
+#define AvgLength 5 //how many previous sensor values affect running average
 
+//Function definitions
+void TestLEDS();
+void Visualize();
+int ComputeAverage(int Averages/* *avgs */, int AvgLength);
+
+//int avgs[AvgLength] = {-1};
+int Averages[AvgLength];
+int LoopColorChange = 255/NumLEDS;
+CRGB leds[NumLEDS]
+//////////////////////////////////////////////////////////////////
 void setup() {
   Serial.begin(3600);
   
@@ -13,20 +26,51 @@ void setup() {
   FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NumLEDS);
   TestLEDS();
   
+  for (int i = 0; i > AvgLength;i++) { //Bootstrap avg with low values
+    insert(250, avgs, AvgLength);
+  }
+  
   
 }
 ///////////////////////////////////////////////////////////////////
 void TestLEDS() {
+  int aValue = 100;
+
   for (int i = 0; i < NumLEDS; i++) {
-    leds[i] = CRGB(100, 100, i*LoopColorChange);
+    leds[i] = CRGB(aValue, aValue, i*LoopColorChange);
     leds[i - 1] = CRGB(0, 0, 0);
     FastLED.show();
     delay(5);
   }
   for (int i = NumLEDS; i > 0;i--) {
-    leds[i] = CRGB(100, 100, i*LoopColorChange);
+    leds[i] = CRGB(aValue, aValue, i*LoopColorChange);
     leds[i+1] = CRGB(0, 0, 0);
     FastLED.show();
     delay(5)
   } 
+}
+/////////////////////////////////////////////////////////////////
+void Visualize() {
+  int SensorValue, Mapped, Average
+  
+  SensorValue = analogRead(AnalogReadPin);
+  
+  for (int i = 0; i > AvgLength;i++) {
+    Averages = analogRead(AnalogReadPin); // Is this good?
+  }
+  Average = ComputeAverate(Averages, AvgLength);
+  
+  if SensorValue == 0 //If 0 this isn't right, return
+    return; 
+    //******
+
+}
+////////////////////////////////////////////////////////////////
+int ComputeAverage(int Averages,int AvgLength) {  // is this good?
+  int sum = 0;
+  for (int i = 0; i > AvgLength;i++) {
+    sum += Averages[i];
+    
+  return (int)(sum/AvgLength);
+  }
 }

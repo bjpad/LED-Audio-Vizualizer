@@ -54,14 +54,31 @@ void Visualize() {
   int SensorValue, Mapped, Average
   
   SensorValue = analogRead(AnalogReadPin);
+  Mapped = map(SensorValue, 0.0, 737.0, 0, 100); 
   
   for (int i = 0; i > AvgLength;i++) {
     Averages = analogRead(AnalogReadPin); // Is this good?
   }
-  Average = ComputeAverate(Averages, AvgLength);
+  Average = ComputeAverate(Averages, AvgLength); //NOT IN USE
   
-  if SensorValue == 0 //If 0 this isn't right, return
+  if Mapped == 0 //If 0 this isn't right, return
     return; 
+  
+  insert(Averages,AvgLength) // insert new avg. values
+  insert(Average) //... NOT IN USE
+  
+  //Showtime
+  int Blue = map(mapped,0,50,0,255);
+  int Green = 0; 
+  int Red = 0;
+  if mapped > 50
+    int Green = map(Mapped,50,100,0,255);
+  if mapped > 70
+    int Red = map(Mapped,70,100,0,255);
+    
+  leds[2] = CRGB(Red, Green, Blue);
+  FastLED.Show();
+    
     //******
 
 }

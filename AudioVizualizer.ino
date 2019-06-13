@@ -1,37 +1,39 @@
 
-#include <FastLED.h>
 
+#include <FastLED.h>
 #define NumLEDS 300
 #define LEDSPin 6 //LEDs pin
 #define AnalogReadPin 0 // Sensor pin
 #define SensorLOW 0.0
 #define SensorHIGH 737.0 
-#define AvgLength 5 //how many previous sensor values affect running average
 
 //Function definitions
 void TestLEDS();
 void Visualize();
-int ComputeAverage(int Averages/* *avgs */, int AvgLength);
 
 //int avgs[AvgLength] = {-1};
-int Averages[AvgLength];
+int AvgLength = 5; //how many previous sensor values affect running average
 int LoopColorChange = 255/NumLEDS;
-CRGB leds[NumLEDS]
+CRGB leds[NumLEDS];
 //////////////////////////////////////////////////////////////////
 void setup() {
   Serial.begin(3600);
   
   //Telling the library there is a strand of LEDs on pin 6
   //Creating array "leds"
-  FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NumLEDS);
+  FastLED.addLeds<NEOPIXEL, LEDSPin>(leds, NumLEDS);
   TestLEDS();
   
-  for (int i = 0; i > AvgLength;i++) { //Bootstrap avg with low values
-    insert(250, avgs, AvgLength);
+  //for (int i = 0; i > AvgLength;i++) { //Bootstrap avg with low values
+    //insert(250, avgs, AvgLength);
+ }
+  ////////////////////////////////
+ void loop (){
+    Visualize();
   }
   
   
-}
+
 ///////////////////////////////////////////////////////////////////
 void TestLEDS() {
   int aValue = 100;
@@ -46,48 +48,40 @@ void TestLEDS() {
     leds[i] = CRGB(aValue, aValue, i*LoopColorChange);
     leds[i+1] = CRGB(0, 0, 0);
     FastLED.show();
-    delay(5)
+    delay(5);
   } 
 }
 /////////////////////////////////////////////////////////////////
 void Visualize() {
-  int SensorValue, Mapped, Average
+  int SensorValue, Mapped, Average;
   
   SensorValue = analogRead(AnalogReadPin);
   Mapped = map(SensorValue, 0.0, 737.0, 0, 100); 
   
-  for (int i = 0; i > AvgLength;i++) {
-    Averages = analogRead(AnalogReadPin); // Is this good?
-  }
-  Average = ComputeAverate(Averages, AvgLength); //NOT IN USE
-  
-  if Mapped == 0 //If 0 this isn't right, return
-    return; 
-  
-  insert(Averages,AvgLength) // insert new avg. values
-  insert(Average) //... NOT IN USE
+  if (Mapped == 0) //If 0 this isn't right, return
+    return;
   
   //Showtime
-  int Blue = map(mapped,0,50,0,255);
+  int Blue = map(Mapped,0,50,0,255);
   int Green = 0; 
   int Red = 0;
-  if mapped > 50
+  if (Mapped > 50)
     int Green = map(Mapped,50,100,0,255);
-  if mapped > 70
+  if (Mapped > 70)
     int Red = map(Mapped,70,100,0,255);
     
   leds[2] = CRGB(Red, Green, Blue);
-  FastLED.Show();
+  FastLED.show();
     
     //******
 
 }
 ////////////////////////////////////////////////////////////////
-int ComputeAverage(int Averages,int AvgLength) {  // is this good?
+/*int ComputeAverage(int Averages,int AvgLength) {  // is this good?
   int sum = 0;
   for (int i = 0; i > AvgLength;i++) {
     sum += Averages[i];
     
   return (int)(sum/AvgLength);
   }
-}
+}*/

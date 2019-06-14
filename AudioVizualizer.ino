@@ -62,13 +62,20 @@ void Visualize() {
     return;
   
   //Showtime
-  int Blue = map(Mapped,0,50,0,255);
+  if (Mapped > 0 && Mapped <= 75)
+    int Blue = (-51/125)*(Mapped-50)*Mapped;
+    int Green = (-51/125)*(Mapped-25)*(Mapped-75);
+    int Red = (-51/125)*(Mapped-50)*(Mapped-100);
+    if (Mapped > 75)
+      int Red = 255;
+  
+  /*int Blue = map(Mapped,0,50,0,255);
   int Green = 0; 
   int Red = 0;
   if (Mapped > 50)
     int Green = map(Mapped,50,100,0,255);
   if (Mapped > 70)
-    int Red = map(Mapped,70,100,0,255);
+    int Red = map(Mapped,70,100,0,255);*/
     
   leds[2] = CRGB(Red, Green, Blue);
   FastLED.show();

@@ -30,13 +30,10 @@ void setup() {
   ////////////////////////////////
  void loop (){
     Visualize();
-  }
-  
-  
-
+ }
 ///////////////////////////////////////////////////////////////////
 void TestLEDS() {
-  int aValue = 100;
+  int aValue = 10;
 
   for (int i = 0; i < NumLEDS; i++) {
     leds[i] = CRGB(aValue, aValue, i*LoopColorChange);
@@ -53,39 +50,36 @@ void TestLEDS() {
 }
 /////////////////////////////////////////////////////////////////
 void Visualize() {
-  int SensorValue, Mapped, Average;
+  int SensorValue, Mapped, Average, Blue, Green, Red;
   
   SensorValue = analogRead(AnalogReadPin);
   Mapped = map(SensorValue, 0.0, 737.0, 0, 100); 
   
   if (Mapped == 0) //If 0 this isn't right, return
     return;
+//A TEST
+  //leds[3] = CRGB(0,255,0);
+  //FastLED.show();
   
   //Showtime
-  if (Mapped > 0 && Mapped <= 75)
-    int Blue = (-51/125)*(Mapped-50)*Mapped;
-    if (Blue < 0)
-      Blue = 0;
-    int Green = (-51/125)*(Mapped-25)*(Mapped-75);
-    if (Green < 0)
-      Green = 0;
-    int Red = (-51/125)*(Mapped-50)*(Mapped-100);
-    if (Red < 0)
-      Red = 0;
-  
-    if (Mapped > 75)
-      int Red = 255;
-  
+  if (Mapped > 0 && Mapped <= 50)
+    Blue = map((50-Mapped)*Mapped,0,625,0,255);
+  if (Mapped > 25 && Mapped <= 75)
+    Green = map((25-Mapped)*(75-Mapped),0,625,0,255);
+  if (Mapped > 50 && Mapped <= 75)
+    Red = map((50-Mapped)*(100-Mapped),0,625,0,255);
+  if (Mapped > 75)
+    Red = 200;
+
+  leds[3] = CRGB(Red, Green, Blue);
+  FastLED.show();
   /*int Blue = map(Mapped,0,50,0,255);
   int Green = 0; 
   int Red = 0;
   if (Mapped > 50)
     int Green = map(Mapped,50,100,0,255);
   if (Mapped > 70)
-    int Red = map(Mapped,70,100,0,255);*/
-    
-  leds[2] = CRGB(Red, Green, Blue);
-  FastLED.show();
+    int Red = map(Mapped,70,100,0,255);*
     
     //******
 

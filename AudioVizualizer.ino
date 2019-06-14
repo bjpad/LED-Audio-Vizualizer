@@ -64,8 +64,15 @@ void Visualize() {
   //Showtime
   if (Mapped > 0 && Mapped <= 75)
     int Blue = (-51/125)*(Mapped-50)*Mapped;
+    if (Green < 0)
+      Blue = 0;
     int Green = (-51/125)*(Mapped-25)*(Mapped-75);
+    if (Green < 0)
+      Green = 0;
     int Red = (-51/125)*(Mapped-50)*(Mapped-100);
+    if (Red < 0)
+      Red = 0;
+  
     if (Mapped > 75)
       int Red = 255;
   

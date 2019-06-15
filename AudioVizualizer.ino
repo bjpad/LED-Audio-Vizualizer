@@ -83,7 +83,7 @@ void Visualize() {
          leds[Count+i] = CRGB(0, 0, 0);
          Rest++;
        if (i > BreakGroup && i <= LitGroup + BreakGroup) //Light them up
-         leds[Count+i+Rest] = CRGB(Red, Green, Blue); //Lit LED group
+         leds[Count+i] = CRGB(Red, Green, Blue); //Lit LED group
     }
   }
 }

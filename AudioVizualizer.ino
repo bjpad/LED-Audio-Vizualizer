@@ -74,10 +74,22 @@ void Visualize() {
   leds[3] = CRGB(Red, Green, Blue);
   FastLED.show();
   
-  int LitGroup = 8, BreakGroup = 4, Count;
+  int LitGroup = 8, BreakGroup = 4, Count; 
+  for (Count = 1; Count < NumLEDS; Count++){
+    for (int i = 0; i <= LitGroup + BreakGroup; i++) {
+      
+      if (i < BreakGroup)
+        leds[Count+i] = CRGB(0, 0, 0);
+        leds[Count+i] = leds[Count+i+1];
+      
+      if (i > BreakGroup && i <= LitGroup + BreakGroup) //Light them up
+         leds[Count+i] = CRGB(Red, Green, Blue); //Lit LED group
+         leds[Count+i] = leds[Count+i+1];
+    }
+  }
   
-  for (Count = 1; Count <= NumLEDS; Count++) {
-     int Rest = 1;
+  /*for (Count = 1; Count <= NumLEDS; Count++) { // ONE ATTEMPT
+     int Rest = 1; // Needed????
      for (int i = 0; i<=LitGoup+BreakGroup; i++) {
        if (i <= BreakGroup) //Break in between Group
          leds[Count+i] = CRGB(0, 0, 0);
@@ -85,7 +97,7 @@ void Visualize() {
        if (i > BreakGroup && i <= LitGroup + BreakGroup) //Light them up
          leds[Count+i] = CRGB(Red, Green, Blue); //Lit LED group
     }
-  }
+  }*/
 }
   /*int Blue = map(Mapped,0,50,0,255);
   int Green = 0; 

@@ -88,7 +88,7 @@ void Visualize() {
          //leds[Count+i] = leds[Count+i+1];
       
       for (int j = 1; j <= Count+i; j++) {
-        leds[Count+i+1] = leds[j]; 
+        leds[Count+i+j] = leds[j]; 
       }
     }
   }

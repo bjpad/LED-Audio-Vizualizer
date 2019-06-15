@@ -77,17 +77,14 @@ void Visualize() {
   int LitGroup = 8, BreakGroup = 4, Count; 
   for (Count = 1; Count < NumLEDS; Count++){
     for (int i = 0; i <= LitGroup + BreakGroup; i++) {
-      //leds[Count+i-1] = leds[Count+i+1];
-      for (int j = i; j > 0; j--) {
+      for (int j = i; j > 0; j--) { //Successful bit shifting of leds array
         leds[Count+j] = leds[j]; 
       
       if (i < BreakGroup)
         leds[Count/*+i*/] = CRGB(0, 0, 0);
-        //leds[Count+i] = leds[Count+i+1];
       
       if (i > BreakGroup && i <= LitGroup + BreakGroup) //Light them up
          leds[Count/*+i*/] = CRGB(Red, Green, Blue); //Lit LED group
-         //leds[Count+i] = leds[Count+i+1];
      
       }
     }

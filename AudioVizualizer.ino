@@ -78,7 +78,7 @@ void Visualize() {
   for (Count = 1; Count < NumLEDS; Count++){
     for (int i = 0; i <= LitGroup + BreakGroup; i++) {
       //leds[Count+i-1] = leds[Count+i+1];
-      for (int j = 1; j < Count+i; j++) {
+      for (int j = i; j > 0; j--) {
         leds[Count+j] = leds[j]; 
       
       if (i < BreakGroup)

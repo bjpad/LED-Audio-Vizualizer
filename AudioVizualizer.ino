@@ -29,7 +29,7 @@ void setup() {
  }
   ////////////////////////////////
  void loop (){
-    Visualize();
+   Visualize();
  }
 ///////////////////////////////////////////////////////////////////
 void TestLEDS() {
@@ -70,9 +70,21 @@ void Visualize() {
     Red = map((50-Mapped)*(100-Mapped),0,625,0,255);
   if (Mapped > 75)
     Red = 200;
-
+  
   leds[3] = CRGB(Red, Green, Blue);
   FastLED.show();
+  
+  int Count = 0, Group = 8;
+  while (Count != NumLEDS) {
+  Count++;
+    for (int i = 0; i<=8; i++) {
+      
+    }
+    
+  }
+  if (Count == NumLEDS)
+    Count = 0;
+}
   /*int Blue = map(Mapped,0,50,0,255);
   int Green = 0; 
   int Red = 0;

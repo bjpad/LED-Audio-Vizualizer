@@ -75,17 +75,15 @@ void Visualize() {
   FastLED.show();
   
   int LitGroup = 8, BreakGroup = 4, Count;
-  while (Count != NumLEDS) {
-    Count++;
-    for (Count = 1; Count <= NumLEDS; Count++) {
-       int Rest = 1;
-      for (int i = 1; i<=LitGoup+BreakGroup; i++) {
-        if (i <= BreakGroup) //Break in between Group
-          leds[Count+i+Rest] = CRGB(0, 0, 0);
-          Rest++;
-        if (i > BreakGroup && i <= LitGroup + BreakGroup) //Light them up
-          leds[Count+i] = CRGB(Red, Green, Blue); //Lit LED group
-      }
+  
+  for (Count = 1; Count <= NumLEDS; Count++) {
+     int Rest = 1;
+     for (int i = 0; i<=LitGoup+BreakGroup; i++) {
+       if (i <= BreakGroup) //Break in between Group
+         leds[Count+i] = CRGB(0, 0, 0);
+         Rest++;
+       if (i > BreakGroup && i <= LitGroup + BreakGroup) //Light them up
+         leds[Count+i+Rest] = CRGB(Red, Green, Blue); //Lit LED group
     }
   }
 }

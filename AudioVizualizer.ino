@@ -79,7 +79,7 @@ void Visualize() {
     for (int i = 0; i <= LitGroup + BreakGroup; i++) {
       //leds[Count+i-1] = leds[Count+i+1];
       for (int j = 1; j <= Count+i; j++) {
-        leds[Count+i+j] = leds[j]; 
+        leds[Count+j] = leds[j]; 
       
       if (i < BreakGroup)
         leds[Count+i] = CRGB(0, 0, 0);

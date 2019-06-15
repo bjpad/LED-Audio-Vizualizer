@@ -87,8 +87,8 @@ void Visualize() {
          leds[Count+i] = CRGB(Red, Green, Blue); //Lit LED group
          //leds[Count+i] = leds[Count+i+1];
       
-      for (int j = 2; j <= Count+i+2; j++) {
-        leds[j] = leds[Count+i]; 
+      for (int j = 1; j <= Count+i; j++) {
+        leds[Count+i] = leds[j]; 
       }
     }
   }

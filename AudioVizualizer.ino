@@ -5,18 +5,19 @@
 #define AnalogReadPin 0 // Sensor pin
 #define SensorLOW 0.0
 #define SensorHIGH 737.0
+#define MappedHIGH 100
 
 
 //int avgs[AvgLength] = {-1};
-int Average, FuncAverage; //how many previous sensor values affect running average
-int LoopColorChange = 255/NumLEDS, VisualizeDelay = 1;
+int Average; //how many previous sensor values affect running average
+int LoopColorChange = 255/NumLEDS, VisualizeDelay = 3, OffGroupSize = 4;
 int Valid = 1,Count = 1,Blanks = 0;
 CRGB leds[NumLEDS];
 
 //Function definitions
 void TestLEDS();
-int Calibrate(int FuncAverage);
-void Visualize(int Average);
+int Calibrate();
+void Visualize(int Average, int OffGroupSize);
 //////////////////////////////////////////////////////////////////
 void setup() {
   Serial.begin(3600);
@@ -25,14 +26,14 @@ void setup() {
   //Creating array "leds"
   FastLED.addLeds<NEOPIXEL, LEDSPin>(leds, NumLEDS);
   TestLEDS();
-  Average = Calibrate(FuncAverage);
+  Average = Calibrate();
 
   //for (int i = 0; i > AvgLength;i++) { //Bootstrap avg with low values
   //insert(250, avgs, AvgLength);
 }
 ////////////////////////////////
 void loop () {
-  Visualize(Average); // pass in count
+  Visualize(Average,OffGroupSize); // pass in count
   delay(VisualizeDelay);
 }
 ///////////////////////////////////////////////////////////////////
@@ -53,10 +54,10 @@ void TestLEDS() {
   }
 }
 /////////////////////////////////////////////////////////////////
-int Calibrate(int FuncAverage) {
+int Calibrate() { //Calibrate to initial ambient sound levels
   int TimeCal = 3600;
-  int MicValue;
-  leds[1] = CRGB(200,200,0); //Green
+  int MicValue, FuncAverage;
+  leds[1] = CRGB(200,200,0); //Yellow - Calibrating
   FastLED.show();
   
   for (int i = 0; i <= TimeCal; i++) {
@@ -64,30 +65,27 @@ int Calibrate(int FuncAverage) {
     FuncAverage = (MicValue+Average)/2;
     delay(1);
   }
-  FuncAverage = map(FuncAverage,0, 737.0, 0, 100);
+  FuncAverage = map(FuncAverage, SensorLOW, SensorHIGH, 0, MappedHIGH);
   
-  leds[1] = CRGB(0,150,0); //Green
+  leds[1] = CRGB(0,150,0); //Green - Ready
   FastLED.show();
   delay(TimeCal);
-  leds[1] = CRGB(150,150,150); //Green
+  leds[1] = CRGB(150,150,150); //White - Done
   FastLED.show();
   
-  return FuncAverage;
+  return FuncAverage; //Work on making the "Average" the middle value of Mappedvalues
 }
 /////////////////////////////////////////////////////////////////
-void Visualize(int Average) {
+void Visualize(int Average,int OffGroupSize) {
   int SensorValue, Mapped, Blue, Green, Red;
-  int OffGroupSize = 5; //MOVE UP
+
 
   SensorValue = analogRead(AnalogReadPin);
-  Mapped = map(SensorValue, 0, 737.0, Average, 100);
+  Mapped = map(SensorValue, SensorLOW, SensorHIGH, 0, MappedHIGH);
 
   if (Mapped == 0) {//If 0 this isn't right, return
     return;
   }
-
-
-//int Valid,Count = 0;,Blanks = 0; //Put before "void setup() {..."
 
   for (int i = NumLEDS; i >= 1; i--) { //Successful bit shifting of leds array
     leds[i] = leds[i-1];

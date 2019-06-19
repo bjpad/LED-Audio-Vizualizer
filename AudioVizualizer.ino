@@ -9,7 +9,7 @@
 
 //int avgs[AvgLength] = {-1};
 int Average, FuncAverage; //how many previous sensor values affect running average
-int LoopColorChange = 255 / NumLEDS;
+int LoopColorChange = 255/NumLEDS, VisualizeDelay = 1;
 int Valid = 1,Count = 1,Blanks = 0;
 CRGB leds[NumLEDS];
 
@@ -33,7 +33,7 @@ void setup() {
 ////////////////////////////////
 void loop () {
   Visualize(Average); // pass in count
-  delay(10);
+  delay(VisualizeDelay);
 }
 ///////////////////////////////////////////////////////////////////
 void TestLEDS() {
@@ -49,7 +49,7 @@ void TestLEDS() {
     leds[i] = CRGB(130,0,75); //pink
     leds[i + 1] = CRGB(0, 0, 0);
     FastLED.show();
-    delay(2); //should be 5
+    delay(5); //should be 5
   }
 }
 /////////////////////////////////////////////////////////////////
@@ -77,13 +77,14 @@ int Calibrate(int FuncAverage) {
 /////////////////////////////////////////////////////////////////
 void Visualize(int Average) {
   int SensorValue, Mapped, Blue, Green, Red;
+  int OffGroupSize = 5; //MOVE UP
 
   SensorValue = analogRead(AnalogReadPin);
   Mapped = map(SensorValue, 0, 737.0, Average, 100);
 
-  /*if (Mapped == 0) {//If 0 this isn't right, return
+  if (Mapped == 0) {//If 0 this isn't right, return
     return;
-  }*/
+  }
 
 
 //int Valid,Count = 0;,Blanks = 0; //Put before "void setup() {..."
@@ -119,13 +120,12 @@ void Visualize(int Average) {
     leds[1] = CRGB(0,0,0);
     Valid = 0;
     Blanks++;
-    if (Blanks == 6)
+    if (Blanks == OffGroupSize)
       Valid = 1;
   }
   if (Count == NumLEDS){
     Count == 0;
   }
-  //delay(5);
   FastLED.show();
 }
   
@@ -139,7 +139,6 @@ void Visualize(int Average) {
          leds[Count+i] = CRGB(Red, Green, Blue); //Lit LED group
     }
   }*/
-}
   /*int Blue = map(Mapped,0,50,0,255);
   int Green = 0; 
   int Red = 0;

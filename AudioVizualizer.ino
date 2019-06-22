@@ -1,4 +1,5 @@
-
+//SMOOTH VERSION BUT WITH WIERD SPACING OF OFF LEDS
+//Calibration function not yet implemented, if LOW then make 0, if AVERAGE then make 50
 #include <FastLED.h>
 #define NumLEDS 299
 #define LEDSPin 6 //LEDs pin
@@ -17,7 +18,7 @@ CRGB leds[NumLEDS];
 //Function definitions
 void TestLEDS();
 int Calibrate();
-void Visualize(int Average, int OffGroupSize);
+void Visualize(int Average, int OffGroupSize,int Count);
 //////////////////////////////////////////////////////////////////
 void setup() {
   Serial.begin(3600);
@@ -33,7 +34,11 @@ void setup() {
 }
 ////////////////////////////////
 void loop () {
-  Visualize(Average,OffGroupSize); // pass in count
+  Visualize(Average,OffGroupSize,Count); // pass in count
+  Count++;
+  if (Count == NumLEDS){
+    Count == 1;
+  }
   delay(VisualizeDelay);
 }
 ///////////////////////////////////////////////////////////////////
@@ -76,25 +81,20 @@ int Calibrate() { //Calibrate to initial ambient sound levels
   return FuncAverage; //Work on making the "Average" the middle value of Mappedvalues
 }
 /////////////////////////////////////////////////////////////////
-void Visualize(int Average,int OffGroupSize) {
+void Visualize(int Average,int OffGroupSize,int Count) {
   int SensorValue, Mapped, Blue, Green, Red;
 
-
+  
   SensorValue = analogRead(AnalogReadPin);
   Mapped = map(SensorValue, SensorLOW, SensorHIGH, 0, MappedHIGH);
 
-  if (Mapped == 0) {//If 0 this isn't right, return
-    return;
-  }
-
   for (int i = NumLEDS; i >= 1; i--) { //Successful bit shifting of leds array
-    leds[i] = leds[i-1];
-        
-  }
+      leds[i] = leds[i-1];    
+    }
 
   if (Count%10 != 0 && Valid == 1) {//for lit LEDs
     Blanks = 0;//Reset counter for Blanks
-  
+
     if (Mapped > 0 && Mapped <= 50) //Range 1
       Blue = map((50-Mapped)*Mapped,0,625,0,255);
       if (Mapped >= 25)
@@ -121,12 +121,8 @@ void Visualize(int Average,int OffGroupSize) {
     if (Blanks == OffGroupSize)
       Valid = 1;
   }
-  if (Count == NumLEDS){
-    Count == 0;
-  }
   FastLED.show();
 }
-  
   /*for (Count = 1; Count <= NumLEDS; Count++) { // ONE ATTEMPT
      int Rest = 1; // Needed????
      for (int i = 0; i<=LitGoup+BreakGroup; i++) {
